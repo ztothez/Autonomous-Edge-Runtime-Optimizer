@@ -1,0 +1,26 @@
+# Build artifacts
+build/
+__pycache__/
+*.pyc
+*.o
+*.elf
+*.hex
+*.bin
+*.map
+
+# IDE
+.vscode/
+.idea/
+.gemini/
+
+# Python venv
+venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project Documentation
+docs/*
+!docs/.gitkeep
