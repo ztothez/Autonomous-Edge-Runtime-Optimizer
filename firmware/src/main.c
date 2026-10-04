@@ -25,11 +25,56 @@ static void ccc_changed(const struct bt_gatt_attr *attr, uint16_t value)
     }
 }
 
+static struct bt_uuid_128 cfg_uuid = BT_UUID_INIT_128(
+    BT_UUID_128_ENCODE(0xe5a10003, 0x4a1b, 0x4c3d, 0x8f00, 0x0123456789ab));
+
+struct config_pkt {
+    uint16_t sample_period_ms;
+} __packed;
+
+#define PERIOD_MIN_MS 50
+#define PERIOD_MAX_MS 5000
+static volatile struct config_pkt cfg = { .sample_period_ms = 1000 };  /* safe default */
+
+static ssize_t read_cfg(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+                        void *buf, uint16_t len, uint16_t offset)
+{
+    return bt_gatt_attr_read(conn, attr, buf, len, offset, (const void *)&cfg, sizeof(cfg));
+}
+
+static ssize_t write_cfg(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+                         const void *buf, uint16_t len, uint16_t offset, uint8_t flags)
+{
+
+    if (offset != 0) {
+        return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+    }
+
+    if (len != sizeof(cfg)) {
+        return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+    }
+
+    struct config_pkt new_cfg;
+    memcpy(&new_cfg, buf, sizeof(new_cfg));
+
+    if (new_cfg.sample_period_ms < PERIOD_MIN_MS || new_cfg.sample_period_ms > PERIOD_MAX_MS) {
+        //       return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED) and change nothing
+        return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
+    }
+
+    cfg = new_cfg;
+    printf("New period: %d ms\n", cfg.sample_period_ms);
+    return len;
+}
+
 BT_GATT_SERVICE_DEFINE(edge_svc,
     BT_GATT_PRIMARY_SERVICE(&svc_uuid),
     BT_GATT_CHARACTERISTIC(&telem_uuid.uuid, BT_GATT_CHRC_NOTIFY,
                            BT_GATT_PERM_NONE, NULL, NULL, NULL),
     BT_GATT_CCC(ccc_changed, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE),
+    BT_GATT_CHARACTERISTIC(&cfg_uuid.uuid, BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
+                           BT_GATT_PERM_READ | BT_GATT_PERM_WRITE,
+                           read_cfg, write_cfg, NULL),
 );
 
 static void recycled(void)
@@ -76,6 +121,6 @@ int main(void)
         pkt.uptime_ms = k_uptime_get_32();
         bt_gatt_notify(NULL, &edge_svc.attrs[1], &pkt, sizeof(pkt));
         pkt.seq++;
-        k_msleep(1000);
+        k_msleep(cfg.sample_period_ms);
     }
 }
