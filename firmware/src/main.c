@@ -43,6 +43,13 @@ static void recycled(void)
 }
 BT_CONN_CB_DEFINE(conn_cbs) = { .recycled = recycled };
 
+struct telemetry_pkt {
+    uint32_t seq;
+    uint32_t uptime_ms;
+    int32_t  sample;
+    uint32_t proc_time_us;
+} __packed;
+
 int main(void)
 {
     int err;
@@ -60,10 +67,15 @@ int main(void)
     }
     printf("Advertising as EdgeOpt\n");
 
-    uint32_t counter = 0;
+    struct telemetry_pkt pkt = {0};
     while (1) {
-        counter++;
-        bt_gatt_notify(NULL, &edge_svc.attrs[1], &counter, sizeof(counter));
+        uint32_t t0 = k_cycle_get_32();
+        pkt.sample = (pkt.seq % 100);
+        uint32_t t1 = k_cycle_get_32();
+        pkt.proc_time_us = k_cyc_to_us_floor32(t1 - t0);
+        pkt.uptime_ms = k_uptime_get_32();
+        bt_gatt_notify(NULL, &edge_svc.attrs[1], &pkt, sizeof(pkt));
+        pkt.seq++;
         k_msleep(1000);
     }
 }
