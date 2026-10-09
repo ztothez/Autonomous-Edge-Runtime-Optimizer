@@ -4,6 +4,44 @@
 #include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/uuid.h>
 #include <zephyr/bluetooth/conn.h>
+#include <zephyr/drivers/i2c.h>
+
+static const struct device *const i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
+
+static void i2c_scan(void)
+{
+    uint8_t dummy;
+    int found = 0;
+
+    if (!device_is_ready(i2c_dev)) {
+        printf("I2C device not ready\n");
+        return;
+    }
+
+    for (uint8_t addr = 0x08; addr <= 0x77; addr++) {
+        if (i2c_read(i2c_dev, &dummy, 1, addr) != 0) {
+            continue;
+        }
+        found++;
+        printf("Found device at 0x%02X", addr);
+
+        if (addr == 0x76 || addr == 0x77) {
+            uint8_t id;
+            if (i2c_reg_read_byte(i2c_dev, addr, 0xD0, &id) == 0) {
+                printf("  chip ID 0x%02X (%s)", id,
+                       id == 0x60 ? "BME280" : id == 0x58 ? "BMP280" : "unknown");
+            }
+        } else if (addr == 0x68 || addr == 0x69) {
+            uint8_t who;
+            if (i2c_reg_read_byte(i2c_dev, addr, 0x75, &who) == 0) {
+                printf("  WHO_AM_I 0x%02X", who);
+            }
+        }
+        printf("\n");
+    }
+    printf("I2C scan done, %d device(s)\n", found);
+}
+
 
 static const struct bt_data ad[] = {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
@@ -111,6 +149,8 @@ int main(void)
         return 0;
     }
     printf("Advertising as EdgeOpt\n");
+    k_msleep(500);
+    i2c_scan();
 
     struct telemetry_pkt pkt = {0};
     while (1) {
