@@ -42,7 +42,12 @@ int main(void)
     struct telemetry_pkt pkt = {0};
     int64_t next = k_uptime_get();
 
+    uint32_t busy_us = 0;                         /* CPU-busy time in the current window */
+    uint32_t win_start_ms = k_uptime_get_32();
+
     while (1) {
+        uint32_t b0 = DWT->CYCCNT;                /* start of this iteration's work */
+
         /* ---- Phase 1: Embedded Baseline - windowed RMS feature + processing time ---- */
         int32_t mg = sensor_read_mg();
         buf[n++] = mg;
@@ -62,6 +67,12 @@ int main(void)
             printf("rms %u mg  proc %u us\n", rms, us);
             n = 0;
 
+            /* ---- Phase 1: CPU-load proxy = busy time / elapsed time, in permille ---- */
+            uint32_t elapsed_ms = k_uptime_get_32() - win_start_ms;
+            pkt.duty_permille = elapsed_ms ? busy_us / elapsed_ms : 0;
+            busy_us = 0;
+            win_start_ms = k_uptime_get_32();
+
             /* ---- Phase 1: telemetry packet assembly ---- */
             pkt.rms_mg = rms;
             pkt.proc_us = us;
@@ -79,9 +90,11 @@ int main(void)
                 }
                 pkt.seq++;
             }
-        }                                   /* closes if (n >= WINDOW) */
+        }
+
+        busy_us += (DWT->CYCCNT - b0) / CPU_MHZ;       /* work done this iteration, before sleeping */
 
         next += config_sample_period_ms();
         k_sleep(K_TIMEOUT_ABS_MS(next));
-    }                                       /* closes while */
-}                                           /* closes main */
+    }
+}

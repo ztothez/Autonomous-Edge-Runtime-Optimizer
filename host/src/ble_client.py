@@ -18,8 +18,8 @@ def on_telemetry(sender, data):
         lost += seq - last_seq - 1
     last_seq = seq
     print(f"Seq: {seq}, Uptime: {uptime_ms}, RMS: {rms_mg} mg, Proc: {proc_us} us, "
-          f"Events: {events}, Windows: {windows}, Sent: {sent}, Err: {notify_err}, Lost: {lost}")
-
+          f"Duty: {duty_permille}, Events: {events}, Windows: {windows}, "
+          f"Sent: {sent}, Err: {notify_err}, Lost: {lost}")
 async def read_period(client):
     data = await client.read_gatt_char(CFG_UUID)
     return struct.unpack("<H", data)[0]
