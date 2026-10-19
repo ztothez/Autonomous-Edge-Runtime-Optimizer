@@ -70,6 +70,10 @@ int main(void)
             /* ---- Phase 1: CPU-load proxy = busy time / elapsed time, in permille ---- */
             uint32_t elapsed_ms = k_uptime_get_32() - win_start_ms;
             pkt.duty_permille = elapsed_ms ? busy_us / elapsed_ms : 0;
+            size_t unused = 0;
+            if (k_thread_stack_space_get(k_current_get(), &unused) == 0) {
+                pkt.stack_free = unused;               /* bytes never used so far (minimum headroom) */
+            }
             busy_us = 0;
             win_start_ms = k_uptime_get_32();
 
@@ -93,7 +97,6 @@ int main(void)
         }
 
         busy_us += (DWT->CYCCNT - b0) / CPU_MHZ;       /* work done this iteration, before sleeping */
-
         next += config_sample_period_ms();
         k_sleep(K_TIMEOUT_ABS_MS(next));
     }
