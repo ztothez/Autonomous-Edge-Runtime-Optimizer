@@ -5,8 +5,48 @@
 #include <zephyr/bluetooth/uuid.h>
 #include <zephyr/bluetooth/conn.h>
 #include <zephyr/drivers/i2c.h>
+#include <string.h>
 
 static const struct device *const i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
+
+#define N_MAX 128
+static int32_t buf[N_MAX];
+static uint16_t n;
+
+static uint32_t isqrt64(uint64_t v)
+{
+    uint64_t r = 0;
+    uint64_t bit = 1ULL << 62;
+
+    while (bit > v) {
+        bit >>= 2;
+    }
+
+    while (bit) {
+        if (v >= r + bit) {
+            v -= r + bit;
+            r = (r >> 1) + bit;
+        } else {
+            r >>= 1;
+        }
+        bit >>= 2;
+    }
+    return (uint32_t)r;
+}
+
+static int32_t acquire(void)
+{
+    uint8_t b[6];
+    if (i2c_burst_read(i2c_dev, 0x68, 0x3B, b, sizeof(b)) != 0) {
+        return 0;                       
+    }
+    int32_t x = (int16_t)((b[0] << 8) | b[1]); 
+    int32_t y = (int16_t)((b[2] << 8) | b[3]);
+    int32_t z = (int16_t)((b[4] << 8) | b[5]);
+    printf("x: %d, y: %d, z: %d\n", x, y, z);
+    int64_t m2 = (int64_t)x * x + (int64_t)y * y + (int64_t)z * z;
+    return (int32_t)((uint64_t)isqrt64((uint64_t)m2) * 1000 / 16384);
+}
 
 static void i2c_scan(void)
 {
@@ -151,11 +191,14 @@ int main(void)
     printf("Advertising as EdgeOpt\n");
     k_msleep(500);
     i2c_scan();
+    i2c_reg_write_byte(i2c_dev, 0x68, 0x6B, 0x00);   /* wake MPU-6050 */
+    k_msleep(100);
 
     struct telemetry_pkt pkt = {0};
     while (1) {
         uint32_t t0 = k_cycle_get_32();
-        pkt.sample = (pkt.seq % 100);
+        pkt.sample = acquire();
+        printf("mag %d mg\n", pkt.sample);
         uint32_t t1 = k_cycle_get_32();
         pkt.proc_time_us = k_cyc_to_us_floor32(t1 - t0);
         pkt.uptime_ms = k_uptime_get_32();
@@ -164,3 +207,4 @@ int main(void)
         k_msleep(cfg.sample_period_ms);
     }
 }
+
