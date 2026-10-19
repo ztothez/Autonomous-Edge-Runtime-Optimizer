@@ -42,11 +42,10 @@ int main(void)
     struct telemetry_pkt pkt = {0};
 
     while (1) {
-        uint32_t t0 = k_cycle_get_32();
-
         /* ---- Phase 1: Embedded Baseline - windowed RMS feature + processing time ---- */
-        pkt.sample = sensor_read_mg();
-        buf[n++] = pkt.sample;
+        int32_t mg = sensor_read_mg();
+        buf[n++] = mg;
+
         if (n >= WINDOW) {
             uint32_t c0 = DWT->CYCCNT;
             uint32_t rms = window_rms(buf, n);
@@ -61,13 +60,24 @@ int main(void)
 
             printf("rms %u mg  proc %u us\n", rms, us);
             n = 0;
+
+            /* ---- Phase 1: telemetry packet assembly ---- */
+            pkt.rms_mg = rms;
+            pkt.proc_us = us;
+            pkt.events = events;
+            pkt.period_ms = config_sample_period_ms();
+            pkt.windows++;
+            pkt.uptime_ms = k_uptime_get_32();
+
+            /* ---- Phase 1: BLE telemetry out (one report per window) ---- */
+            if (ble_svc_notify(&pkt) == 0) {
+                pkt.sent++;
+            } else {
+                pkt.notify_err++;
+            }
+            pkt.seq++;
         }
 
-        uint32_t t1 = k_cycle_get_32();
-        pkt.proc_time_us = k_cyc_to_us_floor32(t1 - t0);
-        pkt.uptime_ms = k_uptime_get_32();
-        ble_svc_notify(&pkt);
-        pkt.seq++;
         k_msleep(config_sample_period_ms());
     }
 }
