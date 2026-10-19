@@ -6,10 +6,12 @@
 #include <zephyr/bluetooth/conn.h>
 #include <zephyr/drivers/i2c.h>
 #include <string.h>
+#include <cmsis_core.h>
 
 static const struct device *const i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
 
 #define N_MAX 128
+#define WINDOW 16
 static int32_t buf[N_MAX];
 static uint16_t n;
 
@@ -43,7 +45,6 @@ static int32_t acquire(void)
     int32_t x = (int16_t)((b[0] << 8) | b[1]); 
     int32_t y = (int16_t)((b[2] << 8) | b[3]);
     int32_t z = (int16_t)((b[4] << 8) | b[5]);
-    printf("x: %d, y: %d, z: %d\n", x, y, z);
     int64_t m2 = (int64_t)x * x + (int64_t)y * y + (int64_t)z * z;
     return (int32_t)((uint64_t)isqrt64((uint64_t)m2) * 1000 / 16384);
 }
@@ -112,7 +113,7 @@ struct config_pkt {
 
 #define PERIOD_MIN_MS 50
 #define PERIOD_MAX_MS 5000
-static volatile struct config_pkt cfg = { .sample_period_ms = 1000 };  /* safe default */
+static volatile struct config_pkt cfg = { .sample_period_ms = 50 };  /* safe default */
 
 static ssize_t read_cfg(struct bt_conn *conn, const struct bt_gatt_attr *attr,
                         void *buf, uint16_t len, uint16_t offset)
@@ -172,7 +173,7 @@ struct telemetry_pkt {
     int32_t  sample;
     uint32_t proc_time_us;
 } __packed;
-
+//main function
 int main(void)
 {
     int err;
@@ -194,11 +195,35 @@ int main(void)
     i2c_reg_write_byte(i2c_dev, 0x68, 0x6B, 0x00);   /* wake MPU-6050 */
     k_msleep(100);
 
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+
     struct telemetry_pkt pkt = {0};
     while (1) {
         uint32_t t0 = k_cycle_get_32();
+
+        /* ---- Phase 1: Embedded Baseline - windowed RMS feature + processing time ---- */
         pkt.sample = acquire();
-        printf("mag %d mg\n", pkt.sample);
+        buf[n++] = pkt.sample;
+        if (n >= WINDOW) {
+            uint32_t c0 = DWT->CYCCNT;
+            int64_t sum = 0;
+            for (uint16_t i = 0; i < n; i++) {
+                sum += buf[i];
+            }
+            int32_t mean = (int32_t)(sum / n);
+            uint64_t var = 0;
+            for (uint16_t i = 0; i < n; i++) {
+                int32_t diff = buf[i] - mean;
+                var += (uint64_t)diff * diff;
+            }
+            uint32_t rms = isqrt64(var / n);
+            uint32_t us = (DWT->CYCCNT - c0) / 64;     /* 64 MHz core clock */
+            printf("rms %u mg  proc %u us\n", rms, us);
+            n = 0;
+        }
+
         uint32_t t1 = k_cycle_get_32();
         pkt.proc_time_us = k_cyc_to_us_floor32(t1 - t0);
         pkt.uptime_ms = k_uptime_get_32();
@@ -207,4 +232,3 @@ int main(void)
         k_msleep(cfg.sample_period_ms);
     }
 }
-
