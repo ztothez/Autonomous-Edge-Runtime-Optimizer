@@ -10,6 +10,9 @@
 #include "ble_svc.h"
 #include "config/config.h"
 
+/* true while the host has notifications enabled (set from the CCC callback) */
+static bool subscribed;
+
 static const struct bt_data ad[] = {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
     BT_DATA(BT_DATA_NAME_COMPLETE, CONFIG_BT_DEVICE_NAME,
@@ -25,11 +28,13 @@ static struct bt_uuid_128 cfg_uuid = BT_UUID_INIT_128(
 
 static void ccc_changed(const struct bt_gatt_attr *attr, uint16_t value)
 {
-    if (value == BT_GATT_CCC_NOTIFY) {
-        printf("Notifications enabled\n");
-    } else {
-        printf("Notifications disabled\n");
-    }
+    subscribed = (value == BT_GATT_CCC_NOTIFY);
+    printf("Notifications %s\n", subscribed ? "enabled" : "disabled");
+}
+
+bool ble_svc_subscribed(void)
+{
+    return subscribed;
 }
 
 static ssize_t read_cfg(struct bt_conn *conn, const struct bt_gatt_attr *attr,

@@ -1,6 +1,9 @@
 #pragma once
 #include <stdint.h>
 #include <zephyr/toolchain.h>
+#include <stdbool.h>
+
+bool ble_svc_subscribed(void);
 
 /* Phase 1/2: BLE telemetry out, runtime configuration in */
 
@@ -27,3 +30,4 @@ int ble_svc_init(void);
 /* Send one telemetry notification to the subscribed host.
  * Returns 0 on success, negative errno otherwise. */
 int ble_svc_notify(const struct telemetry_pkt *pkt);
+

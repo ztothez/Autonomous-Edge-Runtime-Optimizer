@@ -40,6 +40,7 @@ int main(void)
     uint32_t events = 0;
     bool above_prev = false;
     struct telemetry_pkt pkt = {0};
+    int64_t next = k_uptime_get();
 
     while (1) {
         /* ---- Phase 1: Embedded Baseline - windowed RMS feature + processing time ---- */
@@ -70,14 +71,17 @@ int main(void)
             pkt.uptime_ms = k_uptime_get_32();
 
             /* ---- Phase 1: BLE telemetry out (one report per window) ---- */
-            if (ble_svc_notify(&pkt) == 0) {
-                pkt.sent++;
-            } else {
-                pkt.notify_err++;
+            if (ble_svc_subscribed()) {
+                if (ble_svc_notify(&pkt) == 0) {
+                    pkt.sent++;
+                } else {
+                    pkt.notify_err++;
+                }
+                pkt.seq++;
             }
-            pkt.seq++;
-        }
+        }                                   /* closes if (n >= WINDOW) */
 
-        k_msleep(config_sample_period_ms());
-    }
-}
+        next += config_sample_period_ms();
+        k_sleep(K_TIMEOUT_ABS_MS(next));
+    }                                       /* closes while */
+}                                           /* closes main */
