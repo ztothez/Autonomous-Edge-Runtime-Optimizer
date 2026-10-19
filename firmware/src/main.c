@@ -8,10 +8,13 @@
 #include <string.h>
 #include <cmsis_core.h>
 
+
 static const struct device *const i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
 
 #define N_MAX 128
 #define WINDOW 16
+#define EVENT_RMS_MG 50
+
 static int32_t buf[N_MAX];
 static uint16_t n;
 
@@ -198,6 +201,9 @@ int main(void)
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     DWT->CYCCNT = 0;
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+    uint32_t events = 0;
+        bool above_prev = false;                 /* before the while loop */
+
 
     struct telemetry_pkt pkt = {0};
     while (1) {
@@ -212,14 +218,24 @@ int main(void)
             for (uint16_t i = 0; i < n; i++) {
                 sum += buf[i];
             }
+
             int32_t mean = (int32_t)(sum / n);
             uint64_t var = 0;
             for (uint16_t i = 0; i < n; i++) {
                 int32_t diff = buf[i] - mean;
                 var += (uint64_t)diff * diff;
             }
+            
             uint32_t rms = isqrt64(var / n);
-            uint32_t us = (DWT->CYCCNT - c0) / 64;     /* 64 MHz core clock */
+            uint32_t us = (DWT->CYCCNT - c0) / 64;     /* measure first */
+
+            bool above = rms > EVENT_RMS_MG;
+            if (above && !above_prev) {                /* rising edge = one new event */
+                events++;
+                printf("EVENT: rms %u mg  events %u\n", rms, events);
+            }
+            above_prev = above;
+
             printf("rms %u mg  proc %u us\n", rms, us);
             n = 0;
         }
