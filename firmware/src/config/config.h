@@ -7,11 +7,17 @@
  * Only parameters with a real, measurable effect on the firmware belong here. */
 
 struct config_pkt {
-    uint16_t sample_period_ms;
+    uint16_t sample_period_ms;   /* T */
+    uint16_t window_n;           /* N: samples per window */
+    uint16_t report_every;       /* R: send one packet every R windows */
 } __packed;
 
-#define PERIOD_MIN_MS 50
-#define PERIOD_MAX_MS 5000
+#define PERIOD_MIN_MS   20
+#define PERIOD_MAX_MS   5000
+#define WINDOW_MIN      8
+#define WINDOW_MAX      64       /* must stay <= N_MAX (128) in main.c */
+#define REPORT_MIN      1
+#define REPORT_MAX      10
 
 /* Snapshot of the active configuration. */
 struct config_pkt config_get(void);

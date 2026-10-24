@@ -11,7 +11,6 @@
 #include "ble/ble_svc.h"
 
 #define N_MAX         128
-#define WINDOW        16
 #define EVENT_RMS_MG  50
 #define CPU_MHZ       64U      /* nRF52833 core clock, DWT cycle counter */
 
@@ -41,18 +40,19 @@ int main(void)
     bool above_prev = false;
     struct telemetry_pkt pkt = {0};
     int64_t next = k_uptime_get();
-
+    uint32_t windows_since_report = 0;
     uint32_t busy_us = 0;                         /* CPU-busy time in the current window */
     uint32_t win_start_ms = k_uptime_get_32();
 
     while (1) {
+        struct config_pkt cfg = config_get();     
         uint32_t b0 = DWT->CYCCNT;                /* start of this iteration's work */
 
         /* ---- Phase 1: Embedded Baseline - windowed RMS feature + processing time ---- */
         int32_t mg = sensor_read_mg();
         buf[n++] = mg;
 
-        if (n >= WINDOW) {
+        if (n >= cfg.window_n) {
             uint32_t c0 = DWT->CYCCNT;
             uint32_t rms = window_rms(buf, n);
             uint32_t us = (DWT->CYCCNT - c0) / CPU_MHZ;
@@ -81,23 +81,28 @@ int main(void)
             pkt.rms_mg = rms;
             pkt.proc_us = us;
             pkt.events = events;
-            pkt.period_ms = config_sample_period_ms();
+            pkt.period_ms = cfg.sample_period_ms;
             pkt.windows++;
             pkt.uptime_ms = k_uptime_get_32();
 
-            /* ---- Phase 1: BLE telemetry out (one report per window) ---- */
-            if (ble_svc_subscribed()) {
-                if (ble_svc_notify(&pkt) == 0) {
-                    pkt.sent++;
-                } else {
-                    pkt.notify_err++;
-                }
-                pkt.seq++;
-            }
-        }
+            windows_since_report++;
+            if (windows_since_report >= cfg.report_every) {
+                windows_since_report = 0;
 
-        busy_us += (DWT->CYCCNT - b0) / CPU_MHZ;       /* work done this iteration, before sleeping */
-        next += config_sample_period_ms();
+                /* ---- Phase 1: BLE telemetry out (one report every R windows) ---- */
+                if (ble_svc_subscribed()) {
+                    if (ble_svc_notify(&pkt) == 0) {
+                        pkt.sent++;
+                    } else {
+                        pkt.notify_err++;
+                    }
+                    pkt.seq++;
+                }
+            }
+        }                                          /* closes if (n >= cfg.window_n) */
+
+        busy_us += (DWT->CYCCNT - b0) / CPU_MHZ;   /* work done this iteration, before sleeping */
+        next += cfg.sample_period_ms;
         k_sleep(K_TIMEOUT_ABS_MS(next));
-    }
-}
+    }                                              /* closes while */
+}                                                  /* closes main */

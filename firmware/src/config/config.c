@@ -4,7 +4,7 @@
 #include "config.h"
 
 /* safe default */
-static struct config_pkt cfg = { .sample_period_ms = 50 };
+static struct config_pkt cfg = { .sample_period_ms = 50, .window_n = 16, .report_every = 2 }; 
 static struct k_spinlock cfg_lock;
 
 struct config_pkt config_get(void)
@@ -23,7 +23,11 @@ uint16_t config_sample_period_ms(void)
 bool config_validate(const struct config_pkt *c)
 {
     return c->sample_period_ms >= PERIOD_MIN_MS &&
-           c->sample_period_ms <= PERIOD_MAX_MS;
+           c->sample_period_ms <= PERIOD_MAX_MS &&
+           c->window_n        >= WINDOW_MIN &&
+           c->window_n        <= WINDOW_MAX &&
+           c->report_every    >= REPORT_MIN &&
+           c->report_every    <= REPORT_MAX;
 }
 
 void config_set(const struct config_pkt *c)
