@@ -1,0 +1,52 @@
+{
+  "limits": {
+    "recall": 0.9,
+    "lat_mean_ms": 1500,
+    "loss_rate": 0.02,
+    "stack_min": 128
+  },
+  "measured": 32,
+  "feasible": 20,
+  "best": {
+    "T": 200.0,
+    "N": 8.0,
+    "R": 1.0,
+    "cost": 0.09965584511445143,
+    "recall": 1.0,
+    "lat_mean_ms": 740.4166666666666,
+    "pps": 0.6249788858484511,
+    "duty": 29.0
+  },
+  "baseline_cost": 1.0,
+  "safe_cost": 0.19126712328767126,
+  "random_search": {
+    "3": {
+      "mean_best_cost": 0.27553251453690303,
+      "p_optimum": 0.0922
+    },
+    "5": {
+      "mean_best_cost": 0.21103516832992095,
+      "p_optimum": 0.161
+    },
+    "8": {
+      "mean_best_cost": 0.16500133604141673,
+      "p_optimum": 0.2476
+    },
+    "12": {
+      "mean_best_cost": 0.13624826470299856,
+      "p_optimum": 0.3738
+    },
+    "16": {
+      "mean_best_cost": 0.12214206650770809,
+      "p_optimum": 0.4882
+    },
+    "24": {
+      "mean_best_cost": 0.10702162227257224,
+      "p_optimum": 0.7562
+    },
+    "32": {
+      "mean_best_cost": 0.09965584511445143,
+      "p_optimum": 1.0
+    }
+  }
+}
