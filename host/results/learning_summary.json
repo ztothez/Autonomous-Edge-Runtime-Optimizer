@@ -1,0 +1,247 @@
+{
+  "configs": 32,
+  "init": 4,
+  "seeds": 400,
+  "loo_mae": {
+    "cost": 0.005346950247352503,
+    "lat_mean_ms": 112.00572518267285,
+    "recall": 0.08379115611152164
+  },
+  "optimum_cost": 0.09965584511445143,
+  "random": {
+    "4": {
+      "p_optimum": 0.1575,
+      "mean_best_cost": 0.23798423132387592
+    },
+    "5": {
+      "p_optimum": 0.1475,
+      "mean_best_cost": 0.20539362581214518
+    },
+    "6": {
+      "p_optimum": 0.1875,
+      "mean_best_cost": 0.19133187835005105
+    },
+    "7": {
+      "p_optimum": 0.1775,
+      "mean_best_cost": 0.18086010426789323
+    },
+    "8": {
+      "p_optimum": 0.235,
+      "mean_best_cost": 0.16517059983344587
+    },
+    "9": {
+      "p_optimum": 0.2975,
+      "mean_best_cost": 0.1507836705963497
+    },
+    "10": {
+      "p_optimum": 0.335,
+      "mean_best_cost": 0.14726503429721577
+    },
+    "11": {
+      "p_optimum": 0.32,
+      "mean_best_cost": 0.1415211496728109
+    },
+    "12": {
+      "p_optimum": 0.3925,
+      "mean_best_cost": 0.13380166886923078
+    },
+    "13": {
+      "p_optimum": 0.41,
+      "mean_best_cost": 0.1332225243368591
+    },
+    "14": {
+      "p_optimum": 0.485,
+      "mean_best_cost": 0.12523529501321337
+    },
+    "15": {
+      "p_optimum": 0.5,
+      "mean_best_cost": 0.12434873257099098
+    },
+    "16": {
+      "p_optimum": 0.4875,
+      "mean_best_cost": 0.1231365787550965
+    },
+    "17": {
+      "p_optimum": 0.5125,
+      "mean_best_cost": 0.12036573761984151
+    },
+    "18": {
+      "p_optimum": 0.5475,
+      "mean_best_cost": 0.11720023317854052
+    },
+    "19": {
+      "p_optimum": 0.6,
+      "mean_best_cost": 0.11398144095002344
+    },
+    "20": {
+      "p_optimum": 0.625,
+      "mean_best_cost": 0.11240946824501023
+    },
+    "21": {
+      "p_optimum": 0.61,
+      "mean_best_cost": 0.11263636025231469
+    },
+    "22": {
+      "p_optimum": 0.67,
+      "mean_best_cost": 0.11091544450437392
+    },
+    "23": {
+      "p_optimum": 0.675,
+      "mean_best_cost": 0.10995138229433196
+    },
+    "24": {
+      "p_optimum": 0.7725,
+      "mean_best_cost": 0.10719020570621225
+    },
+    "25": {
+      "p_optimum": 0.7625,
+      "mean_best_cost": 0.10671500913635369
+    },
+    "26": {
+      "p_optimum": 0.79,
+      "mean_best_cost": 0.10586739795096704
+    },
+    "27": {
+      "p_optimum": 0.8575,
+      "mean_best_cost": 0.10344867867061137
+    },
+    "28": {
+      "p_optimum": 0.885,
+      "mean_best_cost": 0.1028365253591951
+    },
+    "29": {
+      "p_optimum": 0.8925,
+      "mean_best_cost": 0.10223289990897197
+    },
+    "30": {
+      "p_optimum": 0.935,
+      "mean_best_cost": 0.10130825082038603
+    },
+    "31": {
+      "p_optimum": 0.9725,
+      "mean_best_cost": 0.1003150916897939
+    },
+    "32": {
+      "p_optimum": 1.0,
+      "mean_best_cost": 0.09965584511445143
+    }
+  },
+  "guided": {
+    "4": {
+      "p_optimum": 0.1575,
+      "mean_best_cost": 0.23798423132387592
+    },
+    "5": {
+      "p_optimum": 0.4125,
+      "mean_best_cost": 0.1883959674100619
+    },
+    "6": {
+      "p_optimum": 0.54,
+      "mean_best_cost": 0.1791302164644502
+    },
+    "7": {
+      "p_optimum": 0.5725,
+      "mean_best_cost": 0.1650567709230666
+    },
+    "8": {
+      "p_optimum": 0.625,
+      "mean_best_cost": 0.15361106255026036
+    },
+    "9": {
+      "p_optimum": 0.6475,
+      "mean_best_cost": 0.1420432171743285
+    },
+    "10": {
+      "p_optimum": 0.6875,
+      "mean_best_cost": 0.1373278581631363
+    },
+    "11": {
+      "p_optimum": 0.7475,
+      "mean_best_cost": 0.12623150092457328
+    },
+    "12": {
+      "p_optimum": 0.7475,
+      "mean_best_cost": 0.123521994751186
+    },
+    "13": {
+      "p_optimum": 0.735,
+      "mean_best_cost": 0.12653909897917534
+    },
+    "14": {
+      "p_optimum": 0.815,
+      "mean_best_cost": 0.1143528148051373
+    },
+    "15": {
+      "p_optimum": 0.8175,
+      "mean_best_cost": 0.11177038267701822
+    },
+    "16": {
+      "p_optimum": 0.78,
+      "mean_best_cost": 0.11259171217413547
+    },
+    "17": {
+      "p_optimum": 0.7925,
+      "mean_best_cost": 0.11150243809178623
+    },
+    "18": {
+      "p_optimum": 0.795,
+      "mean_best_cost": 0.11085923506858061
+    },
+    "19": {
+      "p_optimum": 0.78,
+      "mean_best_cost": 0.11180142816619125
+    },
+    "20": {
+      "p_optimum": 0.8075,
+      "mean_best_cost": 0.10847264415094038
+    },
+    "21": {
+      "p_optimum": 0.8375,
+      "mean_best_cost": 0.10676390763131383
+    },
+    "22": {
+      "p_optimum": 0.8475,
+      "mean_best_cost": 0.10555283355095371
+    },
+    "23": {
+      "p_optimum": 0.835,
+      "mean_best_cost": 0.10664959701761742
+    },
+    "24": {
+      "p_optimum": 0.8825,
+      "mean_best_cost": 0.10362723539571737
+    },
+    "25": {
+      "p_optimum": 0.8825,
+      "mean_best_cost": 0.10407377157287818
+    },
+    "26": {
+      "p_optimum": 0.9025,
+      "mean_best_cost": 0.10269955594914648
+    },
+    "27": {
+      "p_optimum": 0.91,
+      "mean_best_cost": 0.10251977831991978
+    },
+    "28": {
+      "p_optimum": 0.9225,
+      "mean_best_cost": 0.10179628141033739
+    },
+    "29": {
+      "p_optimum": 0.965,
+      "mean_best_cost": 0.10058907273819424
+    },
+    "30": {
+      "p_optimum": 0.9625,
+      "mean_best_cost": 0.10060191098111736
+    },
+    "31": {
+      "p_optimum": 0.985,
+      "mean_best_cost": 0.10001543415554731
+    },
+    "32": {
+      "p_optimum": 1.0,
+      "mean_best_cost": 0.09965584511445143
+    }
+  }
+}

@@ -14,8 +14,6 @@ struct env_sample {
     int16_t  temp_c100;       /* BME280, 0.01 degC */
     uint16_t hum_c100;        /* BME280, 0.01 %RH */
     uint16_t press_dhpa;      /* BME280, 0.1 hPa */
-    int16_t  dht_temp_c100;   /* DHT11, 0.01 degC (DHT11 resolution is 1 degC) */
-    uint16_t dht_hum_c100;    /* DHT11, 0.01 %RH (resolution 1 %) */
     uint16_t status;          /* ENV_BME_OK / ENV_DHT_OK: last read of each sensor succeeded */
 };
 

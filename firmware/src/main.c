@@ -49,7 +49,6 @@ int main(void)
     struct env_sample env = {0};
     uint16_t env_mask = env_init();              /* bit0 BME280, bit1 DHT11 */
     uint32_t bme_last = k_uptime_get_32();
-    uint32_t dht_last = k_uptime_get_32();
     if (env_mask & ENV_BME_OK) {
         env_read_bme(&env);
     }
@@ -102,8 +101,6 @@ int main(void)
             pkt.temp_c100     = env.temp_c100;
             pkt.hum_c100      = env.hum_c100;
             pkt.press_dhpa    = env.press_dhpa;
-            pkt.dht_temp_c100 = env.dht_temp_c100;
-            pkt.dht_hum_c100  = env.dht_hum_c100;
             pkt.env_status    = env.status;
             pkt.windows++;
             pkt.uptime_ms = k_uptime_get_32();
@@ -133,10 +130,6 @@ int main(void)
         if ((env_mask & ENV_BME_OK) && (now - bme_last) >= ENV_BME_PERIOD_MS) {
             bme_last = now;
             env_read_bme(&env);
-        }
-        if ((env_mask & ENV_DHT_OK) && (now - dht_last) >= ENV_DHT_PERIOD_MS) {
-            dht_last = now;
-            env_read_dht(&env);
         }
     }                                              /* closes while */
 }                                                  /* closes main */
