@@ -1,0 +1,27 @@
+Config: (200, 8, 1, 0)
+up=5907705 ms  rms=    5 mg  events=577
+up=5909305 ms  rms=    3 mg  events=577
+up=5910905 ms  rms=    3 mg  events=577
+up=5912505 ms  rms=    4 mg  events=577
+up=5914105 ms  rms=    3 mg  events=577
+up=5915705 ms  rms=    3 mg  events=577
+up=5917305 ms  rms=    5 mg  events=577
+up=5918905 ms  rms=    4 mg  events=577
+up=5920505 ms  rms=    3 mg  events=577
+up=5922105 ms  rms=    3 mg  events=577
+up=5923705 ms  rms=    5 mg  events=577
+up=5925307 ms  rms=   63 mg  events=578
+up=5926905 ms  rms=   85 mg  events=578
+up=5928505 ms  rms=   66 mg  events=578
+up=5930105 ms  rms=  121 mg  events=578
+up=5931705 ms  rms=    6 mg  events=578
+up=5933305 ms  rms=    6 mg  events=578
+up=5934905 ms  rms=    3 mg  events=578
+up=5936505 ms  rms=    1 mg  events=578
+up=5938105 ms  rms=    5 mg  events=578
+up=5939705 ms  rms=    4 mg  events=578
+up=5941305 ms  rms=    3 mg  events=578
+up=5942905 ms  rms=    2 mg  events=578
+up=5944505 ms  rms=    3 mg  events=578
+up=5946105 ms  rms=    3 mg  events=578
+

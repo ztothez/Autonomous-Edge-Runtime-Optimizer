@@ -20,3 +20,11 @@
 {"ts": "2026-10-25 17:59:44", "event": "deploy", "config": [200, 8, 1], "cost": 0.1}
 {"ts": "2026-10-25 18:00:04", "event": "monitor", "seconds": 20, "packets": 12, "loss": 0.0, "stack_min": 1392, "healthy": true}
 {"ts": "2026-10-25 18:00:04", "event": "done", "final": [200, 8, 1], "final_cost": 0.1, "vs_safe": "48% lower", "vs_baseline": "90% lower"}
+{"ts": "2026-10-25 18:09:02", "event": "start", "deployed": [50, 16, 2], "cost": 0.191, "explore": false}
+{"ts": "2026-10-25 18:09:02", "event": "propose", "step": 1, "config": [200, 8, 1], "predicted_cost": 0.1, "predicted_latency_ms": 740, "predicted_recall": 1.0}
+{"ts": "2026-10-25 18:10:08", "event": "verify", "config": [200, 8, 1], "recall": 1.0, "latency_ms": 874, "loss": 0.0, "measured_cost": 0.1, "qos_ok": true}
+{"ts": "2026-10-25 18:10:08", "event": "accept", "config": [200, 8, 1], "cost": 0.1}
+{"ts": "2026-10-25 18:10:08", "event": "converged", "reason": "no cheaper candidate predicted to pass", "deployed": [200, 8, 1]}
+{"ts": "2026-10-25 18:10:08", "event": "deploy", "config": [200, 8, 1], "cost": 0.1}
+{"ts": "2026-10-25 18:10:28", "event": "monitor", "seconds": 20, "packets": 12, "loss": 0.0, "stack_min": 1392, "healthy": true}
+{"ts": "2026-10-25 18:10:28", "event": "done", "final": [200, 8, 1], "final_cost": 0.1, "vs_safe": "48% lower", "vs_baseline": "90% lower"}
