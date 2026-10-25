@@ -310,8 +310,8 @@ Raw data: [`host/results/experiments.csv`](host/results/experiments.csv).
 
 ![Random search vs grid](host/results/figures/search_budget.png)
 
-**Repeated measurements of the pick (200, 8, 1):** mean latency 674, 740, 857 and 874 ms across
-four runs (grid, 120 s verify, two agent runs). All meet the 1500 ms limit with margin, but the
+**Repeated measurements of the pick (200, 8, 1):** mean latency 674, 740, 857, 874, 677 and 856 ms across
+six runs (grid, 120 s verify, three agent runs, one 60 s re-measure). All meet the 1500 ms limit with margin, but the
 spread (about 200 ms) is the honest uncertainty of the estimate.
 
 **Verification and rollback (board runs):**
@@ -320,6 +320,12 @@ spread (about 200 ms) is the honest uncertainty of the estimate.
   1801 ms. Both were rejected and rolled back. (200, 8, 1) was then verified (recall 1.00,
   674 ms, loss 0) and accepted, deployed on the real sensor, and passed the health monitor
   (loss 0, stack 1392 bytes free).
+* **Re-run after the BMP280 firmware change (25 Oct):** the baseline measured duty 295 and the pick
+  (200, 8, 1) duty 29, mean latency 677 ms, loss 0, so adding the BMP280 read did not change the results.
+  `agent.py --explore` again rejected (200, 8, 2) at 1726 ms and (100, 16, 2) at 1692 ms and accepted
+  (200, 8, 1) (recall 0.917, 856 ms, loss 0). Free stack was 1360 bytes, 32 bytes lower than before,
+  which is the BMP280 driver call depth. A recall of 0.917 is 11 of 12 bursts, a pass with little margin
+  (see the recall quantization limitation).
 
 **Real-sensor check:** with (200, 8, 1) deployed on the real sensor, rms was 3 to 6 mg at rest
 and 63 to 121 mg during a shake, and the event counter rose by one for that shake
@@ -390,6 +396,6 @@ The design decisions, hardware work, experiments and measurements are mine, and 
 from my own board. Commit history does not mark AI-assisted changes individually.
 
 ## Soldering part
-TODO(Roosa): list the components you soldered on the educational board, add clear photos with
-only your soldered components highlighted, and note that the board and extra components are returned
-together with a paper listing your name.
+**In this project:** I soldered the header pins onto the GY-521 (MPU-6050) module myself, so that it
+plugs into the breadboard and connects to the nRF52833 DK with jumper wires. The BMP280 breakout
+is connected through the breadboard as well.
