@@ -78,7 +78,7 @@ int main(void)
 
             /* ---- Phase 1: CPU-load proxy = busy time / elapsed time, in permille ---- */
             uint32_t elapsed_ms = k_uptime_get_32() - win_start_ms;
-            pkt.duty_permille = elapsed_ms ? busy_us / elapsed_ms : 0;
+            pkt.duty_permille = elapsed_ms ? (busy_us * 10U) / elapsed_ms : 0;   /* 0.01 % units */
             size_t unused = 0;
             if (k_thread_stack_space_get(k_current_get(), &unused) == 0) {
                 pkt.stack_free = unused;               /* bytes never used so far (minimum headroom) */
