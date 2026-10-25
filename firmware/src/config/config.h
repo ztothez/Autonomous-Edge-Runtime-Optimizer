@@ -8,10 +8,12 @@
 
 struct config_pkt {
     uint16_t sample_period_ms;   /* T */
-    uint16_t window_n;           /* N: samples per window */
-    uint16_t report_every;       /* R: send one packet every R windows */
+    uint16_t window_n;           /* N */
+    uint16_t report_every;       /* R */
+    uint16_t source;             /* 0 = real sensor, 1 = synthetic events */
 } __packed;
 
+#define SOURCE_MAX      1
 #define PERIOD_MIN_MS   20
 #define PERIOD_MAX_MS   5000
 #define WINDOW_MIN      8

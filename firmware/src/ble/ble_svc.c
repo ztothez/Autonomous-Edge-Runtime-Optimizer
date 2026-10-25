@@ -62,8 +62,8 @@ static ssize_t write_cfg(struct bt_conn *conn, const struct bt_gatt_attr *attr,
     }
 
     config_set(&new_cfg);
-    printf("New config: T=%u N=%u R=%u\n", new_cfg.sample_period_ms,
-        new_cfg.window_n, new_cfg.report_every);
+    printf("New config: T=%u N=%u R=%u src=%u\n", new_cfg.sample_period_ms,
+        new_cfg.window_n, new_cfg.report_every, new_cfg.source);
     return len;
 }
 

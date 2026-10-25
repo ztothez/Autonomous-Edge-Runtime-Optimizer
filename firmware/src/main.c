@@ -2,6 +2,7 @@
  * Sampling and processing live in sensors/ and dsp/, configuration in config/,
  * BLE in ble/. */
 #include <stdio.h>
+#include <string.h>
 #include <zephyr/kernel.h>
 #include <cmsis_core.h>
 
@@ -43,13 +44,21 @@ int main(void)
     uint32_t windows_since_report = 0;
     uint32_t busy_us = 0;                         /* CPU-busy time in the current window */
     uint32_t win_start_ms = k_uptime_get_32();
+    struct config_pkt prev_cfg = config_get();
 
     while (1) {
-        struct config_pkt cfg = config_get();     
-        uint32_t b0 = DWT->CYCCNT;                /* start of this iteration's work */
+        struct config_pkt cfg = config_get();
+        if (memcmp(&cfg, &prev_cfg, sizeof(cfg)) != 0) {
+            n = 0;                       /* drop a window that mixes two configs */
+            windows_since_report = 0;
+            above_prev = false;
+            prev_cfg = cfg;
+        }
+        uint32_t b0 = DWT->CYCCNT;                /* start of this iteration's work */   
 
         /* ---- Phase 1: Embedded Baseline - windowed RMS feature + processing time ---- */
-        int32_t mg = sensor_read_mg();
+        int32_t real_mg = sensor_read_mg();        /* always read: keeps CPU cost realistic */
+        int32_t mg = cfg.source ? sensor_synth_mg(k_uptime_get_32()) : real_mg;
         buf[n++] = mg;
 
         if (n >= cfg.window_n) {

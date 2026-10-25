@@ -79,3 +79,20 @@ int32_t sensor_read_mg(void)
     int64_t m2 = (int64_t)x * x + (int64_t)y * y + (int64_t)z * z;
     return (int32_t)((uint64_t)isqrt64((uint64_t)m2) * 1000 / MPU_LSB_PER_G);
 }
+
+/* Phase 3: deterministic synthetic events with known ground truth.
+ * Burst k starts at uptime k * SYNTH_PERIOD_MS (k >= 1) and lasts SYNTH_BURST_MS. */
+#define SYNTH_PERIOD_MS  5000
+#define SYNTH_BURST_MS   400
+#define SYNTH_AMP_MG     200
+#define SYNTH_NOISE_MG   5
+
+int32_t sensor_synth_mg(uint32_t now_ms)
+{
+    static uint32_t lcg = 12345;
+    lcg = lcg * 1664525u + 1013904223u;
+    int32_t noise = (int32_t)((lcg >> 16) % (2 * SYNTH_NOISE_MG + 1)) - SYNTH_NOISE_MG;
+
+    bool in_burst = now_ms >= SYNTH_PERIOD_MS && (now_ms % SYNTH_PERIOD_MS) < SYNTH_BURST_MS;
+    return 1000 + noise + (in_burst ? SYNTH_AMP_MG : 0);
+}

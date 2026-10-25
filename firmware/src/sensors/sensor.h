@@ -12,3 +12,7 @@ int sensor_init(void);
 /* One accelerometer sample: vector magnitude in (uncalibrated) mg.
  * Returns 0 if the I2C read fails. */
 int32_t sensor_read_mg(void);
+
+/* One synthetic sample: vector magnitude in mg, based on a simple periodic function.
+ * Returns 0 if the synthetic source is disabled. */
+int32_t sensor_synth_mg(uint32_t now_ms);

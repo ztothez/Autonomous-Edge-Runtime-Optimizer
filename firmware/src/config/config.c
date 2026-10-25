@@ -27,7 +27,8 @@ bool config_validate(const struct config_pkt *c)
            c->window_n        >= WINDOW_MIN &&
            c->window_n        <= WINDOW_MAX &&
            c->report_every    >= REPORT_MIN &&
-           c->report_every    <= REPORT_MAX;
+           c->report_every    <= REPORT_MAX &&
+           c->source          <= SOURCE_MAX;
 }
 
 void config_set(const struct config_pkt *c)
