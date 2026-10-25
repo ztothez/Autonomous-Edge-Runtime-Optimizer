@@ -104,7 +104,10 @@ host/
 
 SDO to GND sets the BMP280 address to 0x76; CSB to 3V3 selects I2C mode. AD0 to GND sets the GY-521 address to 0x68.
 
-TODO(Roosa): add a photo of the real breadboard setup.
+**Real setup:** the GY-521 and the BMP280 on the breadboard, wired to the DK as in the diagram above.
+
+![Breadboard setup, view 1](hardware/breadboard1.jpg)
+![Breadboard setup, view 2](hardware/breadboard2.jpg)
 
 **Sensor notes.**
 * The purple breakout was bought as a BME280 but is a **BMP280**: its chip ID is 0x58 (a BME280 reports 0x60).
@@ -148,13 +151,15 @@ Only one BLE connection to the board is possible at a time: close other scripts 
 ```bash
 python3 ble_client.py                 # smoke test: config write, rejection, restore
 python3 experiment.py baseline        # baseline and safe default
-python3 experiment.py grid            # all 32 pruned configs (duration per config: see results/)
+python3 experiment.py grid 60         # all 32 pruned configs, 60 s each (about 35 min in total)
 python3 experiment.py random 8        # random search comparison
 python3 experiment.py one 50 8 5 60   # re-measure a single config
 python3 experiment.py show            # print results/experiments.csv
 ```
 
-TODO(Roosa): state the exact `grid` duration used for the committed results.
+The committed grid results used 60 s per config (11 to 12 injected bursts each). The baseline and safe default
+were measured for about 20 s each (3 to 4 bursts), which is enough for their duty and packet rate (the cost
+normalization) but too short for a meaningful recall estimate.
 
 ### 4. Optimize, verify, roll back
 ```bash
@@ -396,6 +401,9 @@ The design decisions, hardware work, experiments and measurements are mine, and 
 from my own board. Commit history does not mark AI-assisted changes individually.
 
 ## Soldering part
-**In this project:** I soldered the header pins onto the GY-521 (MPU-6050) module myself, so that it
-plugs into the breadboard and connects to the nRF52833 DK with jumper wires. The BMP280 breakout
-is connected through the breadboard as well.
+The soldering I was allowed to do was the **header pins of the GY-521 (MPU-6050) module**, and that is
+the only soldering I did. The module's pins are soldered to a header so that it plugs into the breadboard
+and connects to the nRF52833 DK with jumper wires. Everything else in this project is connected with
+breadboard and jumper wires, with no other soldering.
+
+![GY-521 header pins, my solder joints](hardware/soldering.jpg)f
