@@ -385,9 +385,9 @@ with a staged path to a learning-based optimizer and an autonomous agent. What w
 
 ## My contribution
 This was a solo project; all design, firmware, host software, experiments and documentation
-are mine. AI assistance (Claude) was used for code suggestions and review during development; Experiments were run on my own boardand the measured results are from my hardware.
-
-TODO(Roosa): adjust the AI-assistance sentence to match the course's policy.
+are mine. AI assistance (Claude) was used throughout for code suggestions, review and drafting documentation.
+The design decisions, hardware work, experiments and measurements are mine, and all results come
+from my own board. Commit history does not mark AI-assisted changes individually.
 
 ## Soldering part
 TODO(Roosa): list the components you soldered on the educational board, add clear photos with

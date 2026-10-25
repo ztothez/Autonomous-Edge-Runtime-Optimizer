@@ -1,10 +1,9 @@
-/* Phase 1: BME280 and DHT11 read-out, integer-only conversion (no FPU) */
+/* Phase 1: BMP280 read-out through the Zephyr bme280 driver, integer-only conversion (no FPU) */
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/sensor.h>
 #include <errno.h>
 #include "env.h"
-#include <zephyr/drivers/gpio.h>
 
 static const struct device *const bme = DEVICE_DT_GET_ANY(bosch_bme280);
 
@@ -15,7 +14,7 @@ uint16_t env_init(void)
     if (bme != NULL && device_is_ready(bme)) {
         mask |= ENV_BME_OK;
     } else {
-        printk("BME280 not ready\n");
+        printk("BMP280 not ready\n");
     }
     return mask;
 }
@@ -26,7 +25,7 @@ int env_read_bme(struct env_sample *out)
     int rc = sensor_sample_fetch(bme);
 
     if (rc) {
-        printk("BME280 fetch failed: %d\n", rc);
+        printk("BMP280 fetch failed: %d\n", rc);
         out->status &= ~ENV_BME_OK;
         return rc;
     }

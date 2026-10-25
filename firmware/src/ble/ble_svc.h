@@ -20,10 +20,10 @@ struct telemetry_pkt {
     uint16_t stack_free;
     uint16_t period_ms;
     int16_t  temp_c100;
-    uint16_t hum_c100;
+    uint16_t hum_c100;        /* always 0: BMP280 has no humidity channel */
     uint16_t press_dhpa;
-    int16_t  dht_temp_c100;
-    uint16_t dht_hum_c100;
+    int16_t  dht_temp_c100;   /* reserved, always 0 (DHT11 removed); keeps the 48-byte layout */
+    uint16_t dht_hum_c100;    /* reserved, always 0 */
     uint16_t env_status;
 } __packed;
 

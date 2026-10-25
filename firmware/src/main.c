@@ -47,7 +47,7 @@ int main(void)
     struct config_pkt prev_cfg = config_get();
 
     struct env_sample env = {0};
-    uint16_t env_mask = env_init();              /* bit0 BME280, bit1 DHT11 */
+    uint16_t env_mask = env_init();              /* bit0 BMP280 ready */
     uint32_t bme_last = k_uptime_get_32();
     if (env_mask & ENV_BME_OK) {
         env_read_bme(&env);
