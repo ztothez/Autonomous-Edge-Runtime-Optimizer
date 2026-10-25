@@ -24,10 +24,11 @@ ADDRESS = "F4:58:6B:B4:FE:06"
 TELEM_UUID = "e5a10002-4a1b-4c3d-8f00-0123456789ab"
 CFG_UUID = "e5a10003-4a1b-4c3d-8f00-0123456789ab"
 
-PKT = struct.Struct("<IIIIIIIHHHH")   # must match telemetry_pkt in ble_svc.h
-CFG = struct.Struct("<HHHH")          # T, N, R, source, must match config_pkt
+PKT = struct.Struct("<IIIIIIIHHHHhHHhHH")   # 48 bytes, must match telemetry_pkt in ble_svc.h
+CFG = struct.Struct("<HHHH")                # T, N, R, source, must match config_pkt
 Packet = namedtuple("Packet", "seq uptime_ms rms_mg proc_us events windows sent "
-                              "notify_err duty stack period_ms")
+                              "notify_err duty stack period_ms "
+                              "temp_c100 hum_c100 press_dhpa dht_temp_c100 dht_hum_c100 env_status")
 
 BURST_PERIOD_MS = 5000
 SAFE = (50, 16, 2)                    # safe default (real sensor)

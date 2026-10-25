@@ -5,7 +5,7 @@
 #include <string.h>
 #include <zephyr/kernel.h>
 #include <cmsis_core.h>
-
+#include "sensors/env.h"
 #include "sensors/sensor.h"
 #include "dsp/features.h"
 #include "config/config.h"
@@ -45,6 +45,14 @@ int main(void)
     uint32_t busy_us = 0;                         /* CPU-busy time in the current window */
     uint32_t win_start_ms = k_uptime_get_32();
     struct config_pkt prev_cfg = config_get();
+
+    struct env_sample env = {0};
+    uint16_t env_mask = env_init();              /* bit0 BME280, bit1 DHT11 */
+    uint32_t bme_last = k_uptime_get_32();
+    uint32_t dht_last = k_uptime_get_32();
+    if (env_mask & ENV_BME_OK) {
+        env_read_bme(&env);
+    }
 
     while (1) {
         struct config_pkt cfg = config_get();
@@ -91,6 +99,12 @@ int main(void)
             pkt.proc_us = us;
             pkt.events = events;
             pkt.period_ms = cfg.sample_period_ms;
+            pkt.temp_c100     = env.temp_c100;
+            pkt.hum_c100      = env.hum_c100;
+            pkt.press_dhpa    = env.press_dhpa;
+            pkt.dht_temp_c100 = env.dht_temp_c100;
+            pkt.dht_hum_c100  = env.dht_hum_c100;
+            pkt.env_status    = env.status;
             pkt.windows++;
             pkt.uptime_ms = k_uptime_get_32();
 
@@ -111,7 +125,18 @@ int main(void)
         }                                          /* closes if (n >= cfg.window_n) */
 
         busy_us += (DWT->CYCCNT - b0) / CPU_MHZ;   /* work done this iteration, before sleeping */
+
         next += cfg.sample_period_ms;
         k_sleep(K_TIMEOUT_ABS_MS(next));
+
+        uint32_t now = k_uptime_get_32();
+        if ((env_mask & ENV_BME_OK) && (now - bme_last) >= ENV_BME_PERIOD_MS) {
+            bme_last = now;
+            env_read_bme(&env);
+        }
+        if ((env_mask & ENV_DHT_OK) && (now - dht_last) >= ENV_DHT_PERIOD_MS) {
+            dht_last = now;
+            env_read_dht(&env);
+        }
     }                                              /* closes while */
 }                                                  /* closes main */

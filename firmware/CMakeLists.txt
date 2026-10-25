@@ -4,6 +4,7 @@ project(firmware)
 target_sources(app PRIVATE
     src/main.c
     src/sensors/sensor.c
+    src/sensors/env.c
     src/dsp/features.c
     src/config/config.c
     src/ble/ble_svc.c)

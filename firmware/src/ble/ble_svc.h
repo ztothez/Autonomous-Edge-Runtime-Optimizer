@@ -19,9 +19,15 @@ struct telemetry_pkt {
     uint16_t duty_permille;
     uint16_t stack_free;
     uint16_t period_ms;
+    int16_t  temp_c100;
+    uint16_t hum_c100;
+    uint16_t press_dhpa;
+    int16_t  dht_temp_c100;
+    uint16_t dht_hum_c100;
+    uint16_t env_status;
 } __packed;
 
-_Static_assert(sizeof(struct telemetry_pkt) == 36, "telemetry_pkt must be 36 bytes");
+_Static_assert(sizeof(struct telemetry_pkt) == 48, "telemetry_pkt size");
 
 /* Enable Bluetooth and start advertising as CONFIG_BT_DEVICE_NAME.
  * Returns 0 on success, otherwise the Zephyr error code. */
