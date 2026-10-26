@@ -42,3 +42,83 @@
 {"ts": "2026-10-25 20:54:29", "event": "deploy", "config": [200, 8, 1], "cost": 0.1}
 {"ts": "2026-10-25 20:54:49", "event": "monitor", "seconds": 20, "packets": 12, "loss": 0.0, "stack_min": 1360, "healthy": true}
 {"ts": "2026-10-25 20:54:49", "event": "done", "final": [200, 8, 1], "final_cost": 0.1, "vs_safe": "48% lower", "vs_baseline": "90% lower"}
+{"ts": "2026-10-25 21:23:15", "event": "start", "mode": "learn", "deployed": [50, 16, 2], "cost": 0.191, "seed": 1, "budget": 12, "init": 4}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 1, "config": [20, 16, 2], "why": "random initial sample", "trained_on": 0}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [20, 16, 2], "recall": 1.0, "latency_ms": 426, "loss": 0.0, "measured_cost": 0.479, "qos_ok": true}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [20, 16, 2], "reason": "not cheaper than the deployed config", "restored": [50, 16, 2]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 2, "config": [50, 32, 2], "why": "random initial sample", "trained_on": 1}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [50, 32, 2], "recall": 1.0, "latency_ms": 1772, "loss": 0.0, "measured_cost": 0.148, "qos_ok": false}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [50, 32, 2], "reason": "QoS violated", "restored": [50, 16, 2]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 3, "config": [200, 16, 1], "why": "random initial sample", "trained_on": 2}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [200, 16, 1], "recall": 0.5, "latency_ms": 2307, "loss": 0.0, "measured_cost": 0.061, "qos_ok": false}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [200, 16, 1], "reason": "QoS violated", "restored": [50, 16, 2]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 4, "config": [200, 8, 1], "why": "random initial sample", "trained_on": 3}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [200, 8, 1], "recall": 1.0, "latency_ms": 740, "loss": 0.0, "measured_cost": 0.1, "qos_ok": true}
+{"ts": "2026-10-25 21:23:15", "event": "accept", "config": [200, 8, 1], "cost": 0.1}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 5, "config": [200, 8, 2], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 4, "predicted_cost": 0.066, "predicted_latency_ms": 1233, "predicted_recall": 1.48}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [200, 8, 2], "recall": 0.9166666666666666, "latency_ms": 1579, "loss": 0.0, "measured_cost": 0.071, "qos_ok": false}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [200, 8, 2], "reason": "QoS violated", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 6, "config": [100, 16, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 5, "predicted_cost": 0.125, "predicted_latency_ms": 808, "predicted_recall": 1.02}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [100, 16, 1], "recall": 1.0, "latency_ms": 807, "loss": 0.0, "measured_cost": 0.124, "qos_ok": true}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [100, 16, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 7, "config": [100, 8, 2], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 6, "predicted_cost": 0.15, "predicted_latency_ms": 547, "predicted_recall": 1.0}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [100, 8, 2], "recall": 1.0, "latency_ms": 839, "loss": 0.0, "measured_cost": 0.142, "qos_ok": true}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [100, 8, 2], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 8, "config": [50, 32, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 7, "predicted_cost": 0.176, "predicted_latency_ms": 927, "predicted_recall": 1.06}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [50, 32, 1], "recall": 1.0, "latency_ms": 990, "loss": 0.0, "measured_cost": 0.18, "qos_ok": true}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [50, 32, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 9, "config": [100, 8, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 8, "predicted_cost": 0.192, "predicted_latency_ms": -594, "predicted_recall": 1.35}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [100, 8, 1], "recall": 1.0, "latency_ms": 408, "loss": 0.0, "measured_cost": 0.198, "qos_ok": true}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [100, 8, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 10, "config": [50, 16, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 9, "predicted_cost": 0.25, "predicted_latency_ms": 364, "predicted_recall": 1.09}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [50, 16, 1], "recall": 1.0, "latency_ms": 407, "loss": 0.0, "measured_cost": 0.249, "qos_ok": true}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [50, 16, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 11, "config": [50, 8, 5], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 10, "predicted_cost": 0.214, "predicted_latency_ms": 900, "predicted_recall": 1.02}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [50, 8, 5], "recall": 0.4166666666666667, "latency_ms": 1355, "loss": 0.0, "measured_cost": 0.225, "qos_ok": false}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [50, 8, 5], "reason": "QoS violated", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:23:15", "event": "propose", "step": 12, "config": [20, 64, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 11, "predicted_cost": 0.349, "predicted_latency_ms": 627, "predicted_recall": 1.47}
+{"ts": "2026-10-25 21:23:15", "event": "verify", "config": [20, 64, 1], "recall": 1.0, "latency_ms": 774, "loss": 0.0, "measured_cost": 0.354, "qos_ok": true}
+{"ts": "2026-10-25 21:23:15", "event": "rollback", "rejected": [20, 64, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:23:15", "event": "deploy", "config": [200, 8, 1], "cost": 0.1}
+{"ts": "2026-10-25 21:23:15", "event": "monitor", "seconds": 20, "packets": 10, "loss": 0.0, "stack_min": 1392, "healthy": true}
+{"ts": "2026-10-25 21:23:15", "event": "done", "final": [200, 8, 1], "final_cost": 0.1, "vs_safe": "48% lower", "vs_baseline": "90% lower"}
+{"ts": "2026-10-25 21:23:17", "event": "start", "mode": "learn", "deployed": [50, 16, 2], "cost": 0.191, "seed": 1, "budget": 12, "init": 4}
+{"ts": "2026-10-25 21:23:17", "event": "propose", "step": 1, "config": [20, 16, 2], "why": "random initial sample", "trained_on": 0}
+{"ts": "2026-10-25 21:24:22", "event": "verify", "config": [20, 16, 2], "recall": 1.0, "latency_ms": 391, "loss": 0.0, "measured_cost": 0.479, "qos_ok": true}
+{"ts": "2026-10-25 21:24:22", "event": "rollback", "rejected": [20, 16, 2], "reason": "not cheaper than the deployed config", "restored": [50, 16, 2]}
+{"ts": "2026-10-25 21:24:22", "event": "propose", "step": 2, "config": [50, 32, 2], "why": "random initial sample", "trained_on": 1}
+{"ts": "2026-10-25 21:25:31", "event": "verify", "config": [50, 32, 2], "recall": 1.0, "latency_ms": 1498, "loss": 0.0, "measured_cost": 0.143, "qos_ok": true}
+{"ts": "2026-10-25 21:25:31", "event": "accept", "config": [50, 32, 2], "cost": 0.143}
+{"ts": "2026-10-25 21:25:31", "event": "propose", "step": 3, "config": [200, 16, 1], "why": "random initial sample", "trained_on": 2}
+{"ts": "2026-10-25 21:26:41", "event": "verify", "config": [200, 16, 1], "recall": 0.5454545454545454, "latency_ms": 2199, "loss": 0.0, "measured_cost": 0.063, "qos_ok": false}
+{"ts": "2026-10-25 21:26:41", "event": "rollback", "rejected": [200, 16, 1], "reason": "QoS violated", "restored": [50, 32, 2]}
+{"ts": "2026-10-25 21:26:41", "event": "propose", "step": 4, "config": [200, 8, 1], "why": "random initial sample", "trained_on": 3}
+{"ts": "2026-10-25 21:27:47", "event": "verify", "config": [200, 8, 1], "recall": 1.0, "latency_ms": 866, "loss": 0.0, "measured_cost": 0.1, "qos_ok": true}
+{"ts": "2026-10-25 21:27:47", "event": "accept", "config": [200, 8, 1], "cost": 0.1}
+{"ts": "2026-10-25 21:27:47", "event": "propose", "step": 5, "config": [200, 8, 2], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 4, "predicted_cost": 0.061, "predicted_latency_ms": 1205, "predicted_recall": 1.46}
+{"ts": "2026-10-25 21:28:56", "event": "verify", "config": [200, 8, 2], "recall": 1.0, "latency_ms": 1532, "loss": 0.0, "measured_cost": 0.07, "qos_ok": false}
+{"ts": "2026-10-25 21:28:57", "event": "rollback", "rejected": [200, 8, 2], "reason": "QoS violated", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:28:57", "event": "propose", "step": 6, "config": [100, 16, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 5, "predicted_cost": 0.124, "predicted_latency_ms": 857, "predicted_recall": 1.0}
+{"ts": "2026-10-25 21:30:03", "event": "verify", "config": [100, 16, 1], "recall": 1.0, "latency_ms": 899, "loss": 0.0, "measured_cost": 0.122, "qos_ok": true}
+{"ts": "2026-10-25 21:30:03", "event": "rollback", "rejected": [100, 16, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:30:03", "event": "propose", "step": 7, "config": [100, 8, 2], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 6, "predicted_cost": 0.15, "predicted_latency_ms": 681, "predicted_recall": 1.06}
+{"ts": "2026-10-25 21:31:09", "event": "verify", "config": [100, 8, 2], "recall": 0.9166666666666666, "latency_ms": 762, "loss": 0.0, "measured_cost": 0.142, "qos_ok": true}
+{"ts": "2026-10-25 21:31:09", "event": "rollback", "rejected": [100, 8, 2], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:31:09", "event": "propose", "step": 8, "config": [50, 32, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 7, "predicted_cost": 0.172, "predicted_latency_ms": 864, "predicted_recall": 1.0}
+{"ts": "2026-10-25 21:32:16", "event": "verify", "config": [50, 32, 1], "recall": 1.0, "latency_ms": 782, "loss": 0.0, "measured_cost": 0.172, "qos_ok": true}
+{"ts": "2026-10-25 21:32:16", "event": "rollback", "rejected": [50, 32, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:32:16", "event": "propose", "step": 9, "config": [100, 8, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 8, "predicted_cost": 0.194, "predicted_latency_ms": 147, "predicted_recall": 1.58}
+{"ts": "2026-10-25 21:33:20", "event": "verify", "config": [100, 8, 1], "recall": 1.0, "latency_ms": 399, "loss": 0.0, "measured_cost": 0.198, "qos_ok": true}
+{"ts": "2026-10-25 21:33:20", "event": "rollback", "rejected": [100, 8, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:33:20", "event": "propose", "step": 10, "config": [50, 16, 1], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 9, "predicted_cost": 0.246, "predicted_latency_ms": 307, "predicted_recall": 1.11}
+{"ts": "2026-10-25 21:34:25", "event": "verify", "config": [50, 16, 1], "recall": 1.0, "latency_ms": 449, "loss": 0.0, "measured_cost": 0.251, "qos_ok": true}
+{"ts": "2026-10-25 21:34:25", "event": "rollback", "rejected": [50, 16, 1], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:34:25", "event": "propose", "step": 11, "config": [20, 64, 2], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 10, "predicted_cost": 0.301, "predicted_latency_ms": 931, "predicted_recall": 1.24}
+{"ts": "2026-10-25 21:35:33", "event": "verify", "config": [20, 64, 2], "recall": 0.9166666666666666, "latency_ms": 1209, "loss": 0.0, "measured_cost": 0.314, "qos_ok": true}
+{"ts": "2026-10-25 21:35:33", "event": "rollback", "rejected": [20, 64, 2], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:35:33", "event": "propose", "step": 12, "config": [50, 8, 5], "why": "lowest predicted cost among configs predicted to satisfy QoS", "trained_on": 11, "predicted_cost": 0.213, "predicted_latency_ms": 859, "predicted_recall": 1.01}
+{"ts": "2026-10-25 21:36:41", "event": "verify", "config": [50, 8, 5], "recall": 1.0, "latency_ms": 588, "loss": 0.0, "measured_cost": 0.225, "qos_ok": true}
+{"ts": "2026-10-25 21:36:41", "event": "rollback", "rejected": [50, 8, 5], "reason": "not cheaper than the deployed config", "restored": [200, 8, 1]}
+{"ts": "2026-10-25 21:36:41", "event": "deploy", "config": [200, 8, 1], "cost": 0.1}
+{"ts": "2026-10-25 21:37:01", "event": "monitor", "seconds": 20, "packets": 12, "loss": 0.0, "stack_min": 1344, "healthy": true}
+{"ts": "2026-10-25 21:37:01", "event": "done", "final": [200, 8, 1], "final_cost": 0.1, "vs_safe": "48% lower", "vs_baseline": "90% lower"}

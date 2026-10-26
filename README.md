@@ -77,7 +77,8 @@ host/
   src/ble_client.py      manual BLE test client (config write, rejection test)
   src/experiment.py      measurement model, automated experiment runner, grid and random search
   src/optimize.py        optimizer, search comparison, verify and rollback
-  src/agent.py           closed-loop agent: propose, verify, accept or rollback, health monitor
+  src/agent.py           closed-loop agent: propose, verify, accept or rollback, health monitor;
+                         --learn: model-guided proposals (Phase 6)
   src/learn.py           Phase 6: surrogate model and model-guided search (replayed on measured data)
   src/plots.py           figures and results table
   src/watch.py           real-sensor sanity check
@@ -170,6 +171,7 @@ python3 agent.py --dry-run            # replay agent logic on the measured table
 python3 agent.py                      # closed loop on the board
 python3 agent.py --explore            # optimistic proposals: shows rollbacks happening
 python3 learn.py                      # Phase 6: surrogate model vs random search (no board needed)
+python3 agent.py --learn              # Phase 6 live: model-guided search on the board (about 15 min)
 ```
 
 ### 5. Figures and real-sensor check
@@ -296,6 +298,34 @@ instead of trusting it. The optimum (200, 8, 1) sits in a corner of the grid, wh
 this is an easy landscape for a simple model. The result is a replay on 32 points, not a live experiment, and it
 shows that fewer measurements suffice on this grid, not that the same holds on another one.
 
+### Live run on the board (`python3 agent.py --learn`, seed 1, 12 measurements, 60 s each)
+The agent starts from the safe default, measures 4 random configs, then lets the model choose.
+Every config is verified on the board and rolled back if QoS is violated
+(log: `host/results/agent_log.jsonl`).
+
+| Step | Config (T, N, R) | Chosen by | Predicted cost / latency | Measured cost / latency | Outcome |
+|---|---|---|---|---|---|
+| 1 | (20, 16, 2) | random | | 0.479 / 391 ms | feasible, not cheaper |
+| 2 | (50, 32, 2) | random | | 0.143 / 1498 ms | accepted (2 ms under the limit) |
+| 3 | (200, 16, 1) | random | | 0.063 / 2199 ms, recall 0.55 | QoS violated, rolled back |
+| 4 | (200, 8, 1) | random | | 0.100 / 866 ms | accepted |
+| 5 | (200, 8, 2) | model | 0.061 / 1205 ms | 0.070 / 1532 ms | QoS violated (limit 1500), rolled back |
+| 6 | (100, 16, 1) | model | 0.124 / 857 ms | 0.122 / 899 ms | feasible, not cheaper |
+| 7 | (100, 8, 2) | model | 0.150 / 681 ms | 0.142 / 762 ms | feasible, not cheaper |
+| 8 | (50, 32, 1) | model | 0.172 / 864 ms | 0.172 / 782 ms | feasible, not cheaper |
+| 9 | (100, 8, 1) | model | 0.194 / 147 ms | 0.198 / 399 ms | feasible, not cheaper |
+| 10 | (50, 16, 1) | model | 0.246 / 307 ms | 0.251 / 449 ms | feasible, not cheaper |
+| 11 | (20, 64, 2) | model | 0.301 / 931 ms | 0.314 / 1209 ms | feasible, not cheaper |
+| 12 | (50, 8, 5) | model | 0.213 / 859 ms | 0.225 / 588 ms | feasible, not cheaper |
+
+Final deployment: (200, 8, 1), cost 0.100 (48 % below the safe default, 90 % below the baseline). The health
+monitor saw loss 0 and 1344 free stack bytes. Over steps 5 to 12 the mean absolute error of the predicted cost was
+0.007 and of the predicted latency 184 ms. Read this honestly: the optimum was found by the random initial sample
+(step 4), the model then proposed 8 configs, none cheaper, and 7 of those 8 runs verified configs the model
+predicted to cost more than the deployed one. Stopping early on that signal would save board time, but in replay
+it lowered the chance of finding the optimum from 78 % to 47 %, so it is not implemented. The evidence that the
+model helps is the replay comparison above, not this single run.
+
 ## Results
 20 of 32 measured configurations satisfy all QoS constraints.
 
@@ -357,8 +387,11 @@ and 63 to 121 mg during a shake, and the event counter rose by one for that shak
 * **No humidity sensing.** The BMP280 has no humidity channel and the DHT11 did not work (see Hardware).
 * **Temperature and pressure are logged, not used.** The BMP280 values travel in the telemetry but the
   optimizer does not use them.
-* **The learning model is small and offline.** It is a ridge regression replayed on 32 measured points
-  (see Learning-based search). The deployed agent is still the rule-based loop; it does not call the model.
+* **The learning model is small.** It is a ridge regression on 6 hand-made features, trained on at most 12 live
+  measurements (or 32 in replay). Its recall predictions are unreliable (values above 1), so the search relies on
+  safety margins and on verification on the board, not on the model alone. A live `--learn` run can end at a
+  config worse than the optimum: in replay over 200 seeds with 12 measurements it finds the optimum 78 % of the time.
+  The optimum in the live run below was found by a random initial sample, not by the model.
 
 ## Deviations from the proposal
 The proposal (1 Oct 2026) and the roadmap describe an "environmental and motion" telemetry node
@@ -375,7 +408,7 @@ with a staged path to a learning-based optimizer and an autonomous agent. What w
 | Autonomous agent with verify and rollback | done (rule-based loop over measured data, no LLM) |
 | Temperature sensing | done: BMP280 temperature and pressure in the telemetry |
 | Humidity sensing | **not delivered**: the BMP280 has no humidity channel, and the DHT11 did not work |
-| Lightweight learning-based optimizer (Phase 6) | done as an offline surrogate model with model-guided search, replayed on measured data; not used by the deployed agent |
+| Lightweight learning-based optimizer (Phase 6) | done: ridge-regression surrogate, evaluated in replay on the measured grid and used live by `agent.py --learn` (verify and rollback on the board) |
 | Memory-headroom metric | done as free stack bytes |
 | Power or energy measurement | **not possible**, no power hardware; cost is a proxy |
 
@@ -388,7 +421,7 @@ with a staged path to a learning-based optimizer and an autonomous agent. What w
 | 3 | Measurement model | `host/src/experiment.py` (`summarize`, `qos_ok`, `cost`) |
 | 4 | Automated experimentation | `host/src/experiment.py` (`grid`, `random`, `one`) |
 | 5 | Deterministic optimizer | `host/src/optimize.py` |
-| 6 | Performance model and learning | `host/src/learn.py`, `host/results/learning_summary.json` |
+| 6 | Performance model and learning | `host/src/learn.py`, `host/src/agent.py --learn`, `host/results/learning_summary.json` |
 | 7 | Autonomous agent | `host/src/agent.py` |
 | 8 | Robustness and safety | validation on device, `verify`, rollback, health monitor |
 | 9 | Evidence and evaluation | `host/results/`, `host/src/plots.py`, `host/src/watch.py` |
